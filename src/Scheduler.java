@@ -21,6 +21,7 @@ public class Scheduler {
             System.out.println("4. Rooms");
             System.out.println("5. Other Staff");
             System.out.println("6. Cafeteria Management");
+            System.out.println("7. Gaming Rooms Management");
 
 
             System.out.print("Enter number(O.Exit): ");
@@ -46,6 +47,9 @@ public class Scheduler {
                     break;
                 case 6:
                     manageCafeteria();
+                    break;
+                case 7:
+                    manageGamingRooms();
                     break;
                 default:
                     System.out.println("Wrong Number!");
@@ -353,5 +357,84 @@ public class Scheduler {
         email = inputReader.readLine();
 
         return checkAndGetValidEmail(email);
+    }
+
+    private static void manageGamingRooms() {
+        int input;
+        do {
+            System.out.println("**** Gaming Room Management Menu ****");
+            System.out.println("1. Show Gaming Rooms");
+            System.out.println("2. Add Gaming Room");
+            System.out.println("3. Book a place");
+            System.out.println("4. Show bookings for a room");
+            System.out.print("Enter number (O.Back): ");
+            input = inputReader.readInt();
+
+            switch (input) {
+                case 1:
+                    University.printGamingRooms();
+                    break;
+                case 2:
+                    addGamingRoom();
+                    break;
+                case 3:
+                    bookGamingRoom();
+                    break;
+                case 4:
+                    showGamingRoomBookings();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Wrong Number");
+            }
+        } while (input != 0);
+    }
+    
+    private static void addGamingRoom() {
+        System.out.print("Enter gaming room name: ");
+        String name = inputReader.readLine();
+
+        System.out.print("Enter capacity: ");
+        int capacity = inputReader.readInt();
+
+        University.addGamingRoom(name, capacity);
+    }
+
+    private static void bookGamingRoom() {
+        University.printGamingRooms();
+        System.out.print("Enter gaming room index to book: ");
+        int index = inputReader.readInt();
+
+        GamingRoom room = University.gamingRooms[index];
+        if (room == null) {
+            System.out.println("Invalid room index.");
+            return;
+        }
+
+        System.out.print("Enter student email: ");
+        String email = inputReader.readLine();
+        email = checkAndGetValidEmail(email);
+
+        boolean success = room.bookWithEmail(email);
+        if (success) {
+            System.out.println("Successfully booked a place in " + room.getName() + " for " + email);
+        } else {
+            System.out.println("Sorry, the gaming room is full.");
+        }
+    }
+
+    private static void showGamingRoomBookings() {
+        University.printGamingRooms();
+        System.out.print("Enter gaming room index: ");
+        int index = inputReader.readInt();
+
+        GamingRoom room = University.gamingRooms[index];
+        if (room == null) {
+            System.out.println("Invalid room index.");
+            return;
+        }
+
+        room.printBookings();
     }
 }
